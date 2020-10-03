@@ -1,15 +1,21 @@
 package com.example.madlevel4task1
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.add_product_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_shoppinglist.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,8 +88,61 @@ class ShoppingListFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
             adapter = productAdapter
         }
-        
+
+
+        addItemFabBtn.setOnClickListener {
+            showAddProductDialog()
+        }
     }
+
+    @SuppressLint("InflateParams")
+    private fun showAddProductDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.add_product_dialog_title))
+        val dialogLayout = layoutInflater.inflate(R.layout.add_product_dialog, null)
+
+        val productName = dialogLayout.txt_product_name
+        val amount = dialogLayout.txt_product_amount
+
+        builder.setView(dialogLayout)
+        builder.setPositiveButton(R.string.dialog_ok_btn) { _: DialogInterface, Int ->
+            addProduct(productName, amount)
+        }
+    }
+
+    /**
+     *
+     */
+    private fun addProduct(txtProductName: EditText, txtAmount: EditText) {
+        if (validateFields(txtProductName, txtAmount)) {
+            mainScope.launch {
+                val product = Product(
+                    name = txtProductName.text.toString(),
+                    quantity = txtAmount.text.toString().toInt()
+                )
+
+                withContext(Dispatchers.IO) {
+                    productRepository.insertProduct(product)
+                }
+
+                getShoppingListFromDatabase()
+            }
+        }
+    }
+
+    private fun validateFields(
+        txtProductName: EditText, txtAmount: EditText
+    ): Boolean {
+        return if (txtProductName.text.toString().isNotBlank()
+            && txtAmount.text.toString().isNotBlank()
+        ) {
+            true
+        } else {
+            Toast.makeText(activity, "Please fill in the fields", Toast.LENGTH_LONG).show()
+            false
+        }
+    }
+
 
     /**
      * This method will handle touch movements
