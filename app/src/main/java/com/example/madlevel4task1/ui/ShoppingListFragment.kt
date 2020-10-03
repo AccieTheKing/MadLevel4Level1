@@ -97,9 +97,8 @@ class ShoppingListFragment : Fragment() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(getString(R.string.add_product_dialog_title))
         val dialogLayout = layoutInflater.inflate(R.layout.add_product_dialog, null)
-
         val productName = dialogLayout.findViewById<EditText>(R.id.txt_product_name)
-        val amount = dialogLayout.findViewById<EditText>(R.id.txt_product_amount)
+        val amount = dialogLayout.findViewById<EditText>(R.id.txt_amount)
 
         builder.setView(dialogLayout)
         builder.setPositiveButton(R.string.dialog_ok_btn) { _: DialogInterface, _: Int ->
