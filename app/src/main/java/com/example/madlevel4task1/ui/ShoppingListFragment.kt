@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.madlevel4task1.R
 import com.example.madlevel4task1.model.Product
 import com.example.madlevel4task1.repository.ProductRepository
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_shoppinglist.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,9 +70,9 @@ class ShoppingListFragment : Fragment() {
      * view is created
      */
     private fun initView() {
-//        productAdapter = ProductsAdapter(products)
-//        rvProducts.adapter = productAdapter
-//        rvProducts.layoutManager = LinearLayoutManager(activity)
+        productAdapter = ProductsAdapter(productsList)
+        rvProducts.adapter = productAdapter
+        rvProducts.layoutManager = LinearLayoutManager(activity)
 
         rvProducts.addItemDecoration(
             DividerItemDecoration(
@@ -83,14 +82,6 @@ class ShoppingListFragment : Fragment() {
         )
 
         createItemTouchHelper().attachToRecyclerView(rvProducts)
-
-        // this is an alternative method to link the layoutManager and the adapter to each other
-        rvProducts.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(activity)
-            adapter = productAdapter
-        }
-
 
         addItemFabBtn.setOnClickListener {
             showAddProductDialog()
@@ -111,9 +102,10 @@ class ShoppingListFragment : Fragment() {
         val amount = dialogLayout.findViewById<EditText>(R.id.txt_product_amount)
 
         builder.setView(dialogLayout)
-        builder.setPositiveButton(R.string.dialog_ok_btn) { _: DialogInterface, Int ->
+        builder.setPositiveButton(R.string.dialog_ok_btn) { _: DialogInterface, _: Int ->
             addProduct(productName, amount)
         }
+        builder.show()
     }
 
     /**
