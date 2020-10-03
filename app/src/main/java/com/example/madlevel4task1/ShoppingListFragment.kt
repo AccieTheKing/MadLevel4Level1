@@ -92,6 +92,10 @@ class ShoppingListFragment : Fragment() {
         addItemFabBtn.setOnClickListener {
             showAddProductDialog()
         }
+
+        removeItemFabBtn.setOnClickListener {
+            removeAllProducts()
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -126,6 +130,18 @@ class ShoppingListFragment : Fragment() {
 
                 getShoppingListFromDatabase()
             }
+        }
+    }
+
+    /**
+     * This method will remove all the products from the database
+     */
+    private fun removeAllProducts() {
+        mainScope.launch {
+            withContext(Dispatchers.IO) {
+                productRepository.deleteAllProducts()
+            }
+            getShoppingListFromDatabase()
         }
     }
 
