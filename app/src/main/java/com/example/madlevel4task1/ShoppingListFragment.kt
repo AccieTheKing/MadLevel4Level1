@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.add_product_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_shoppinglist.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -101,8 +100,8 @@ class ShoppingListFragment : Fragment() {
         builder.setTitle(getString(R.string.add_product_dialog_title))
         val dialogLayout = layoutInflater.inflate(R.layout.add_product_dialog, null)
 
-        val productName = dialogLayout.txt_product_name
-        val amount = dialogLayout.txt_product_amount
+        val productName = dialogLayout.findViewById<EditText>(R.id.txt_product_name)
+        val amount = dialogLayout.findViewById<EditText>(R.id.txt_product_amount)
 
         builder.setView(dialogLayout)
         builder.setPositiveButton(R.string.dialog_ok_btn) { _: DialogInterface, Int ->
@@ -111,7 +110,7 @@ class ShoppingListFragment : Fragment() {
     }
 
     /**
-     *
+     * This method is used to construct a product object from input fields that are been validated
      */
     private fun addProduct(txtProductName: EditText, txtAmount: EditText) {
         if (validateFields(txtProductName, txtAmount)) {
@@ -130,6 +129,9 @@ class ShoppingListFragment : Fragment() {
         }
     }
 
+    /**
+     * This method checks if the product and quantity is filled in
+     */
     private fun validateFields(
         txtProductName: EditText, txtAmount: EditText
     ): Boolean {
